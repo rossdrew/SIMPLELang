@@ -16,6 +16,9 @@
         <kotlin.code.style>official</kotlin.code.style>
         <junit.version>4.12</junit.version>
         <mockk.version>1.10.0</mockk.version>
+
+        <kotest.base.version>4.2.5</kotest.base.version>
+        <maven.surefire>2.22.2</maven.surefire>
     </properties>
 
     <dependencies>
@@ -42,6 +45,30 @@
             <version>${mockk.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- Kotest Evaluation -->
+        <dependency>
+            <groupId>io.kotest</groupId>
+            <artifactId>kotest-runner-junit5-jvm</artifactId>
+            <version>${kotest.base.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.kotest</groupId>
+            <artifactId>kotest-assertions-core-jvm</artifactId>
+            <version>${kotest.base.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.kotest</groupId>
+            <artifactId>kotest-property-jvm</artifactId>
+            <version>${kotest.base.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+
     </dependencies>
 
     <build>
@@ -70,6 +97,15 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- Kotest evaluation -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.surefire}</version>
+            </plugin>
+
+
         </plugins>
     </build>
 

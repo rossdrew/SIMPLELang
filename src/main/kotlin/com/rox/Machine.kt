@@ -3,7 +3,7 @@ package com.rox
 import com.rox.expression.Add
 import com.rox.expression.Expression
 import com.rox.expression.Multiply
-import com.rox.expression.Number
+import com.rox.expression.SimpleNumber
 
 class Machine(var expression: Expression) {
     /**
@@ -15,12 +15,12 @@ class Machine(var expression: Expression) {
             Machine(
                 Multiply(
                     Add(
-                        Number(5),
-                        Number(4)
+                        SimpleNumber(5),
+                        SimpleNumber(4)
                     ),
                     Add(
-                        Number(9),
-                        Number(1)
+                        SimpleNumber(9),
+                        SimpleNumber(1)
                     )
                 )
             ).run()
