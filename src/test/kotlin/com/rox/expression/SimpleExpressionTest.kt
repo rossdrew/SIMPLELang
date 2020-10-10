@@ -36,7 +36,9 @@ class SimpleExpressionTest : StringSpec({
         }
 
         forAll(
-            row("And: true&&false=false", SimpleAnd(left, right), true, false, SimpleBoolean(false))
+            row("And: true&&false=false", SimpleAnd(left, right), true, false, SimpleBoolean(false)),
+            row("And: true||false=false", SimpleOr(left, right), true, false, SimpleBoolean(true)),
+            row("And: true^false=false", SimpleXor(left, right), true, true, SimpleBoolean(false))
         ) { _, expression, leftValue, rightValue, expectedResult ->
             every { left.value } returns leftValue
             every { right.value} returns rightValue
