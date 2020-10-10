@@ -2,7 +2,8 @@ package com.rox.expression
 
 import java.lang.RuntimeException
 
-data class Add(override val left: Expression, override val right: Expression): CompoundExpression {
+data class Add(override val left: Expression,
+               override val right: Expression): CompoundExpression {
     override fun isReducible(): Boolean = true;
     override fun reduce(): Expression {
         return when {

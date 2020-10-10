@@ -7,10 +7,13 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 
-class ExpressionTest : StringSpec({
+class SimpleNumberExpressionTest : StringSpec({
+    //TODO Can we redesign so that boolean expressions can be tested here also?
+
     "Should be reducible" {
         val left = mockk<SimpleNumber> {}
         val right = mockk<SimpleNumber> {}
+
         forAll(
             row("Addition", Add(left, right)),
             row("Multiplication", Multiply(left, right)),
@@ -29,6 +32,10 @@ class ExpressionTest : StringSpec({
         val right = mockk<SimpleNumber> {
             every { isReducible() } returns false
         }
+
+        //left mock needs to be a number here so that it
+        // can be passed to add but needs to be something
+        // more general to include other typed values
 
         forAll(
             row("Addition: 5+10=15", Add(left, right), 5, 10, SimpleNumber(15)),
