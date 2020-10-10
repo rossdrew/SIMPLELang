@@ -7,8 +7,10 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 
-class SimpleNumberExpressionTest : StringSpec({
+class SimpleExpressionTest : StringSpec({
     //TODO Can we redesign so that boolean expressions can be tested here also?
+    //     using `mockk<ValueProvider<Expression>>` means that the type checking
+    //     in `ValueProvider` `Expressions` fails as it's not specific enough
 
     "Should be reducible" {
         val left = mockk<SimpleNumber> {}
@@ -21,6 +23,28 @@ class SimpleNumberExpressionTest : StringSpec({
             row("Division", Divide(left, right))
         ) { _, expression ->
             expression.isReducible() shouldBe true
+        }
+    }
+
+    "Can reduce two booleans to one" {
+        val left = mockk<SimpleBoolean> {
+            every { isReducible() } returns false
+        }
+
+        val right = mockk<SimpleBoolean> {
+            every { isReducible() } returns false
+        }
+
+        forAll(
+            row("And: true&&false=false", SimpleAnd(left, right), true, false, SimpleBoolean(false))
+        ) { _, expression, leftValue, rightValue, expectedResult ->
+            every { left.value } returns leftValue
+            every { right.value} returns rightValue
+
+            val reduction = expression.reduce()
+
+            reduction::class shouldBe SimpleBoolean::class
+            reduction shouldBe expectedResult
         }
     }
 
