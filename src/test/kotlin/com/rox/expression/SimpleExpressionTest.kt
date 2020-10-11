@@ -1,5 +1,8 @@
 package com.rox.expression
 
+import com.rox.expression.comparison.EqualTo
+import com.rox.expression.comparison.GreaterThan
+import com.rox.expression.comparison.LessThan
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.data.forAll
 import io.kotest.data.row
@@ -23,6 +26,30 @@ class SimpleExpressionTest : StringSpec({
             row("Division", Divide(left, right))
         ) { _, expression ->
             expression.isReducible() shouldBe true
+        }
+    }
+
+    "Can compare two numbers" {
+        val left = mockk<SimpleNumber> {
+            every { isReducible() } returns false
+        }
+
+        val right = mockk<SimpleNumber> {
+            every { isReducible() } returns false
+        }
+
+        forAll(
+            row("Greater Than: 4>5=false", GreaterThan(left, right), 4, 5, SimpleBoolean(false)),
+            row("Less Than: 4<5=true", LessThan(left, right), 4, 5, SimpleBoolean(true)),
+            row("Equal To: 5==5=true", EqualTo(left, right), 5, 5, SimpleBoolean(true))
+        ) { _, expression, leftValue, rightValue, expectedResult ->
+            every { left.value } returns leftValue
+            every { right.value} returns rightValue
+
+            val reduction = expression.reduce()
+
+            reduction::class shouldBe SimpleBoolean::class
+            reduction shouldBe expectedResult
         }
     }
 
@@ -75,10 +102,6 @@ class SimpleExpressionTest : StringSpec({
         val right = mockk<SimpleNumber> {
             every { isReducible() } returns false
         }
-
-        //left mock needs to be a number here so that it
-        // can be passed to add but needs to be something
-        // more general to include other typed values
 
         forAll(
             row("Addition: 5+10=15", Add(left, right), 5, 10, SimpleNumber(15)),
