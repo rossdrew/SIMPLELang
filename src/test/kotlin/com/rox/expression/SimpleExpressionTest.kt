@@ -26,6 +26,23 @@ class SimpleExpressionTest : StringSpec({
         }
     }
 
+    "Can convert one boolean to another" {
+        val term = mockk<SimpleBoolean> {
+            every { isReducible() } returns false
+        }
+
+        forAll(
+            row("And: !true=false", SimpleNot(term), true, SimpleBoolean(false))
+        ) { _, expression, termValue, expectedResult ->
+            every { term.value } returns termValue
+
+            val reduction = expression.reduce()
+
+            reduction::class shouldBe SimpleBoolean::class
+            reduction shouldBe expectedResult
+        }
+    }
+
     "Can reduce two booleans to one" {
         val left = mockk<SimpleBoolean> {
             every { isReducible() } returns false
