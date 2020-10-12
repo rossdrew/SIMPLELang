@@ -5,14 +5,16 @@ import io.kotest.matchers.shouldBe
 import io.kotest.property.Arb
 import io.kotest.property.RandomSource
 import io.kotest.property.Sample
+import io.kotest.property.arbitrary.int
+import io.kotest.property.arbitrary.map
 import io.kotest.property.checkAll
 
 
 class KotestProperties: StringSpec({
     "Addition" {
-        val simpleNumberGenerator = SimpleNumberGenerator()
+        val genSimpleNumber: Arb<SimpleNumber> = Arb.int().map(::SimpleNumber)
 
-        checkAll(500, simpleNumberGenerator, simpleNumberGenerator) { a, b ->
+        checkAll(500, genSimpleNumber, genSimpleNumber) { a, b ->
             val result = Add(a, b).reduce() as SimpleNumber
             val expected = SimpleNumber(a.value + b.value)
             println("$a + $b = $expected")
@@ -20,20 +22,3 @@ class KotestProperties: StringSpec({
         }
     }
 })
-
-
-class SimpleNumberGenerator : Arb<SimpleNumber>() {
-    override fun edgecases(): List<SimpleNumber> {
-        return listOf(
-            SimpleNumber(0),
-            SimpleNumber(-1),
-            SimpleNumber(1)
-        )
-    }
-
-    override fun values(rs: RandomSource): Sequence<Sample<SimpleNumber>> {
-        return generateSequence {
-            Sample(SimpleNumber(rs.random.nextInt()))
-        }
-    }
-}
