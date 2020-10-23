@@ -11,10 +11,6 @@ import io.mockk.every
 import io.mockk.mockk
 
 class SimpleExpressionTest : StringSpec({
-    //TODO Can we redesign so that boolean expressions can be tested here also?
-    //     using `mockk<ValueProvider<Expression>>` means that the type checking
-    //     in `ValueProvider` `Expressions` fails as it's not specific enough
-
     "Should be reducible" {
         val left = mockk<SimpleNumber> {}
         val right = mockk<SimpleNumber> {}
